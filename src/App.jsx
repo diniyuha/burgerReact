@@ -1,15 +1,15 @@
-import { Container } from "./components/container/container"
+
 import { Header } from "./components/header/Header"
+import { Navigation } from "./components/Navigation/Navigation"
+import { Catalog } from "./components/Catalog/Catalog"
 
 export const App = () => {
     return (
    <>
     <Header />
     <main>
-      <nav>
-        <Container maks="leskin" className="navigation__container"/>
-      </nav>
-      <section></section>
+      <Navigation/>
+      <Catalog/>
     </main>
     <footer></footer>
    </>
