@@ -4,14 +4,12 @@ import productReducer from './product/productSlise';
 import orderReducer, { localStorageMiddleware } from './order/orderSlice';
 
 export const store = configureStore({
-    reducer:{
+    reducer: {
         category: categoryReducer,
         product: productReducer,
         order: orderReducer,
     },
 
     middleware: getDefaultMiddleware =>
-     getDefaultMiddleware().concat(localStorageMiddleware)
-        
-     
+        getDefaultMiddleware().concat(localStorageMiddleware)
 });

@@ -2,15 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API_URI, POSTFIX } from "../../const";
 
 const initialState = {
-   products: [],
-   error: ''
+    products: [],
+    error: ''
 };
 
 export const productRequestAsync = createAsyncThunk(
-    'product/fetch', (category) =>  
+    'product/fetch', (category) =>
     fetch(`${API_URI}${POSTFIX}?category=${category}`)
-            .then(req => req.json())
-            .catch(error => ({error}))
+        .then(req => req.json())
+        .catch(error => ({ error }))
 );
 
 const productSlice = createSlice({

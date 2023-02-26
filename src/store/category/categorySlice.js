@@ -3,25 +3,25 @@ import { API_URI, POSTFIX } from "../../const";
 
 const initialState = {
     category: [],
-      error: '',
-      activeCategory: 0,
+    error: '',
+    activeCategory: 0,
 };
 
 export const categoryRequestAsync = createAsyncThunk(
-    'category/fetch', () =>   fetch(`${API_URI}${POSTFIX}/category`)
-            .then(req => req.json())
-            .catch(error => ({error}))
+    'category/fetch', () => fetch(`${API_URI}${POSTFIX}/category`)
+        .then(req => req.json())
+        .catch(error => ({ error }))
 )
 
 const categorySlice = createSlice({
     name: 'category',
     initialState,
-    reducers:{
+    reducers: {
         changeCategory(state, action) {
             state.activeCategory = action.payload.indexCategory;
         }
     },
-   
+
     extraReducers: builder => {
         builder
             .addCase(categoryRequestAsync.pending, state => {
