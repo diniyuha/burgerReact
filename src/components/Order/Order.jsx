@@ -7,11 +7,12 @@ import { orderRequestAsync } from '../../store/order/orderSlice';
 const orderList = ['Супер сырный', 'Картошка фри', 'Жгучий хот-дог'];
 
 export const Order = () =>{
-    const {totalPrice, totalCount} = useSelector(state => state.order);
+    const { totalPrice, totalCount, orderList, orderGoods } = useSelector(state => state.order);
     const dispatch = useDispatch();
+   
     useEffect(() => {
       dispatch(orderRequestAsync());
-    }, []);
+    }, [orderList.length]);
 
     return(
         <div className={style.order}>
@@ -24,7 +25,7 @@ export const Order = () =>{
         
           <div className={style.wrap_list}>
             <ul className={style.list}>
-              {orderList.map((item, i)=><OrderGoods key={i} item = {item}/>)}
+              {orderGoods.map((item, i)=><OrderGoods key={item.id} {...item}/>)}
             </ul>
         
             <div className={style.total}>

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API_URI, POSTFIX } from "../../const";
+import { calcTotal } from "../../utils/calcTotal";
 
 
 const initialState = {
@@ -37,19 +38,45 @@ const orderSlice = createSlice({
     initialState,
     reducers: {
         addProduct: (state, action) => {
-            const product = state.orderList
+            const productOrderList = state.orderList
                 .find(item => item.id === action.payload.id);
 
-            if (product) {
-                product.count += 1;
+            if (productOrderList) {
+                productOrderList.count += 1;
+
+                const productOrderGoods = state.orderGoods.find(
+                    item => item.id === action.payload.id,
+                );
+
+                productOrderGoods.count = productOrderList.count;
+
+                [state.totalCount, state.totalPrice] = calcTotal(state.orderGoods);
             } else {
                 state.orderList.push({ ...action.payload, count: 1 })
             }
+        },
+        removeProduct: (state, action) => {
+            const productOrderList = state.orderList
+            .find(item => item.id === action.payload.id);
+
+        if (productOrderList.count > 1) {
+            productOrderList.count -= 1;
+
+            const productOrderGoods = state.orderGoods.find(
+                item => item.id === action.payload.id,
+            );
+
+            productOrderGoods.count = productOrderList.count;
+
+            [state.totalCount, state.totalPrice] = calcTotal(state.orderGoods);
+        } else {
+            state.orderList = state.orderList.filter(item => item.id !== action.payload.id,)
         }
+        } 
     },
     extraReducers: builder => {
         builder
-            .addCase(orderRequestAsync.pending, (state) => {
+            .addCase(orderRequestAsync.pending, (state) => { 
                 state.error = '';
             })
             .addCase(orderRequestAsync.fulfilled, (state, action) => {
@@ -64,14 +91,8 @@ const orderSlice = createSlice({
 
                 state.error = '';
                 state.orderGoods = orderGoods;
-                state.totalCount = orderGoods.reduce(
-                    (acc, item) => acc + item.count,
-                    0,
-                );
-                state.totalPrice = orderGoods.reduce(
-                    (acc, item) => acc + item.count * item.price,
-                    0,
-                );
+                
+                [state.totalCount, state.totalPrice] = calcTotal(orderGoods);
             })
             .addCase(orderRequestAsync.rejected, (state, action) => {
                 state.error = action.payload.error;
@@ -79,5 +100,5 @@ const orderSlice = createSlice({
     }
 });
 
-export const { addProduct } = orderSlice.actions;
+export const { addProduct , removeProduct} = orderSlice.actions;
 export default orderSlice.reducer;
